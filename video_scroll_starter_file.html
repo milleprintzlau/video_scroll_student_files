@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="">
-<!--
+  <!--
 
 KEYWORDS!
 
@@ -15,43 +15,73 @@ canplaythrough event
 duration
 currentTime
 -->
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Scroll in video</title>
     <style>
+      .outerVideoContainer {
+        width: 768px;
+        height: 432px;
+        overflow: scroll;
+      }
 
-        .outerVideoContainer {
+      .innerVideoContainer {
+        width: 400px;
+        height: 5000px;
+      }
 
-        }
-
-        .innerVideoContainer {
-
-
-
-        }
-
-        video {
-
-
-        }
-
-
+      #myVideo {
+        position: fixed;
+      }
+      video {
+        width: 100%;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div class="outerVideoContainer">
-        <div class="innerVideoContainer">
-            <video src="video/theVideo.mp4" width="768" height="432"></video>
-        </div>
+      <div class="innerVideoContainer">
+        <video
+          id="myVideo"
+          src="video/theVideo.mp4"
+          width="768"
+          height="432"
+        ></video>
+      </div>
     </div>
 
     <script>
+      let vid;
+      let vidLength;
+      let scrollDistance;
 
+      document.addEventListener("DOMContentLoaded", loadTheVideo);
 
+      function loadTheVideo() {
+        vid = document.getElementById("myVideo");
+        vid.oncanplaythrough = videoLoaded;
+      }
 
+      function videoLoaded() {
+        vidLength = vid.duration;
+        scrollEvent();
+      }
+
+      function scrollEvent() {
+        scrollDistance =
+          document.querySelector(".outerVideoContainer").scrollHeight -
+          document.querySelector(".outerVideoContainer").clientHeight;
+        console.log("scrollDistance", scrollDistance);
+        document
+          .querySelector(".outerVideoContainer")
+          .addEventListener("scroll", scrollFunc);
+      }
+      function scrollFunc(evt) {
+        console.log("Scrolltop", evt.target.scrollTop);
+        vid.currentTime = (evt.target.scrollTop / scrollDistance) * vidLength;
+      }
     </script>
-</body>
-
+  </body>
 </html>
